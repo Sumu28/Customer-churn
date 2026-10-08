@@ -6,7 +6,7 @@ For a telecom company, losing a customer costs far more than keeping one. This p
 
 We followed the CRISP-DM process from data preparation through to evaluation, and put as much effort into explaining the models as into scoring them.
 
-> Group project at Dublin City University with **Kavya Kumar** and **Modi Eyobo**. *(Add a link to the report PDF here if you want to share it.)*
+> Group project at Dublin City University with **Kavya Kumar** and **Modi Eyobo**. 
 
 ---
 
@@ -76,7 +76,8 @@ Customers on shorter contracts, paying more each month, and early in their time 
 
 ### SHAP analysis
 
-*(Add your SHAP summary plot here, plus two or three sentences on what it shows. The report has this analysis, but the README needs the picture.)*
+<img width="451" height="267" alt="image" src="https://github.com/user-attachments/assets/1b87be53-e64f-41b9-b6ca-e42c24b906bc" />
+
 
 ---
 
