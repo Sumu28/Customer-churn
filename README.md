@@ -1,43 +1,28 @@
-# Customer Churn Prediction Using Machine Learning
+# Customer Churn Prediction
 
-## Overview
+**Which customers are about to leave, and what is pushing them out?**
 
-Customer churn prediction is a critical problem for subscription-based businesses, particularly in the telecommunications industry. This project develops and evaluates multiple machine learning models to predict whether a customer is likely to discontinue a service.
+For a telecom company, losing a customer costs far more than keeping one. This project builds and compares four machine learning models that predict whether a customer will cancel their service, and then looks inside the models to see *why* customers leave.
 
-The project follows the CRISP-DM methodology and compares four classification algorithms:
+We followed the CRISP-DM process from data preparation through to evaluation, and put as much effort into explaining the models as into scoring them.
 
-- Logistic Regression
-- Decision Tree
-- Random Forest
-- XGBoost
-
-In addition to predictive modelling, the project incorporates:
-
-- Statistical feature validation using Statsmodels
-- Threshold tuning for Logistic Regression
-- SHAP (SHapley Additive Explanations) for model interpretability
-- Feature importance analysis
-- Overfitting assessment through train-test comparison
+> Group project at Dublin City University with **Kavya Kumar** and **Modi Eyobo**. *(Add a link to the report PDF here if you want to share it.)*
 
 ---
 
-## Objectives
+## What we set out to do
 
-1. Predict customer churn using machine learning models.
-2. Identify the most influential factors contributing to customer churn.
-3. Compare model performance under class imbalance conditions.
-4. Provide explainable AI insights through SHAP analysis.
+- Predict which customers will churn.
+- Find the factors that matter most in that decision.
+- Compare how four different models cope when churners are the minority class.
+- Make the results explainable, not just accurate.
 
----
+## The data
 
-## Dataset
-
-The project uses a telecom customer churn dataset containing customer demographic, billing, and subscription information.
-
-### Features
+A telecom customer dataset with demographic, billing and subscription details. *(Add the source, the number of customers, and the share who churned, for example "7,043 customers, 26% churned". Readers need the churn rate to judge the scores below.)*
 
 | Feature | Type |
-|----------|----------|
+|---|---|
 | Age | Numerical |
 | Gender | Categorical |
 | Tenure | Numerical |
@@ -45,177 +30,104 @@ The project uses a telecom customer churn dataset containing customer demographi
 | TotalCharges | Numerical |
 | Contract | Categorical |
 | PaymentMethod | Categorical |
-| Churn | Target Variable |
+| Churn | Target |
 
----
+## How we worked
 
-## Project Workflow
+**Preparing the data.** We handled missing values, label-encoded the categorical columns, scaled the numeric ones with `StandardScaler`, and split the data 80/20 with stratification so both sets kept the same churn rate.
 
-### 1. Data Preprocessing
+**Models.** Logistic Regression, Decision Tree, Random Forest and XGBoost.
 
-- Handling missing values
-- Label encoding categorical features
-- Feature scaling using StandardScaler
-- Stratified train-test split (80:20)
+**Scoring.** We used F1 as the main measure, because with fewer churners than loyal customers, accuracy alone can look good while missing the people we care about. We also looked at precision, recall, confusion matrices and ROC curves.
 
-### 2. Model Development
-
-Implemented:
-
-- Logistic Regression
-- Decision Tree
-- Random Forest
-- XGBoost
-
-### 3. Evaluation Metrics
-
-Primary metric:
-
-- F1 Score
-
-Additional metrics:
-
-- Accuracy
-- Precision
-- Recall
-- Confusion Matrix
-- ROC Analysis
-
-### 4. Explainability
-
-- SHAP TreeExplainer
-- Feature Importance Analysis
-- Statistical Validation (AIC & p-values)
+**Going beyond the scores.**
+- Statsmodels (p-values and AIC) to check the Logistic Regression features statistically
+- Threshold tuning for Logistic Regression
+- SHAP and feature importance to see what drives each prediction
+- A train vs. test comparison to spot overfitting
 
 ---
 
 ## Results
 
-| Model | Accuracy | Precision | Recall | F1 Score |
-|---------|---------|---------|---------|---------|
+| Model | Accuracy | Precision | Recall | F1 |
+|---|---|---|---|---|
 | Logistic Regression | 0.677 | 0.509 | 0.716 | 0.595 |
 | Decision Tree | 0.753 | 0.630 | 0.620 | **0.625** |
 | Random Forest | 0.731 | 0.621 | 0.485 | 0.544 |
 | XGBoost | 0.725 | 0.574 | 0.661 | 0.614 |
 
-### Key Findings
+**What stood out**
 
-- Decision Tree achieved the highest F1 Score (0.625).
-- Random Forest showed significant overfitting.
-- Logistic Regression provided the best statistical interpretability.
-- XGBoost delivered strong predictive performance with explainable outputs.
+- The **Decision Tree** had the best F1 (0.625), with XGBoost close behind at 0.614. The scores are modest, which is typical when the features are limited and the classes are imbalanced.
+- **Logistic Regression** found the most churners (recall 0.716) at the cost of precision, and was the easiest model to interpret statistically.
+- **Random Forest** overfitted noticeably and had the lowest recall. *(Add the train vs. test numbers here, for example "train F1 0.xx vs. test F1 0.xx".)*
+- **XGBoost** predicted well and, with SHAP, gave explanations we could trust.
 
----
+## What drives churn
 
-## Feature Importance Findings
+Three factors came up at the top of the list in every model we checked:
 
-The most influential churn predictors were:
+1. **Contract type**
+2. **Monthly charges**
+3. **Tenure**
 
-1. Contract Type
-2. Monthly Charges
-3. Tenure
+Customers on shorter contracts, paying more each month, and early in their time with the company, were the most likely to leave. *(Check the direction against your SHAP plots before keeping this sentence, then add one or two plots below.)*
 
-These features were consistently identified across:
+### SHAP analysis
 
-- Logistic Regression
-- Decision Tree
-- Random Forest
-- XGBoost
-- SHAP Analysis
+*(Add your SHAP summary plot here, plus two or three sentences on what it shows. The report has this analysis, but the README needs the picture.)*
 
 ---
 
-## Technologies Used
+## Limitations
 
-- Python
-- Pandas
-- NumPy
-- Scikit-learn
-- XGBoost
-- Statsmodels
-- SHAP
-- Matplotlib
-- Seaborn
+- F1 around 0.6 means the models are useful for ranking risk, not for confident individual predictions.
+- Results depend on one dataset with a small set of features.
+- Logistic Regression's threshold was tuned on the same split we evaluated on. Cross-validated tuning would be more reliable.
 
----
+## What we would do next
 
-## Installation
+- Hyperparameter optimisation and cross-validated threshold tuning
+- A deep learning approach for tabular data such as TabNet
+- LIME and counterfactual explanations ("what would need to change for this customer to stay?")
+- Survival analysis to predict *when* a customer will leave, not just whether
+- A real-time scoring pipeline
 
-Clone the repository:
+## Tech stack
+
+Python · Pandas · NumPy · Scikit-learn · XGBoost · Statsmodels · SHAP · Matplotlib · Seaborn
+
+## Run it yourself
 
 ```bash
-git clone https://github.com/yourusername/customer-churn-prediction.git
-
-cd customer-churn-prediction
-```
-
-Install dependencies:
-
-```bash
+git clone https://github.com/Sumu28/<your-repo-name>.git
+cd <your-repo-name>
 pip install -r requirements.txt
-```
-
----
-
-## Running the Project
-
-Run the notebook or Python scripts:
-
-```bash
 jupyter notebook
 ```
 
-or
+*(Edit this to match what is actually in the repo. If there is no `churn_prediction.py`, remove it from the instructions.)*
 
-```bash
-python churn_prediction.py
+## Repository structure
+
+*(Check this against the real folders before publishing.)*
+
 ```
-
----
-
-## Project Structure
-
-```text
-Customer-Churn-Prediction/
-│
-├── data/
-├── notebooks/
-├── models/
-├── outputs/
-│   ├── confusion_matrices/
-│   ├── shap_plots/
-│   └── feature_importance/
-│
-├── Customer_Churn_Report.pdf
-├── requirements.txt
-├── README.md
-└── churn_prediction.py
+data/          # dataset (or instructions for downloading it)
+notebooks/     # analysis and modelling
+models/        # saved models
+outputs/       # confusion matrices, SHAP plots, feature importance
+Customer_Churn_Report.pdf
+requirements.txt
+README.md
 ```
-
----
-
-## Future Improvements
-
-- Hyperparameter optimization
-- Cross-validation-based threshold tuning
-- Deep learning approaches (TabNet)
-- Real-time churn prediction pipelines
-- Counterfactual explanations and LIME
-- Survival analysis for time-to-churn prediction
-
----
 
 ## Authors
 
-- Kavya Kumar
-- Modi Eyobo
-- Sumukha Sagar
-
-School of Computing  
-Dublin City University
-
----
+Sumukha Sagar, Modi Eyobo , Kavya Kumar
+School of Computing, Dublin City University
 
 ## License
 
-This project is released under the MIT License.
+MIT
